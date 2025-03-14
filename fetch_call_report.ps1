@@ -5,20 +5,20 @@ param(
     [string]$user = "test",
     [string]$key,
     [string]$url = "https://YourSubdomainHere.3cx.eu:5001",
-    [string]$from = "2024-12-01T00:00:00Z",        # Use ISO 8601 Zulu time format
-    [string]$to = "2024-12-31T23:59:59Z",          # Use ISO 8601 Zulu time format
-    [int]$sourceType = 0,                          # Example sourceType
-    [string]$sourceFilter = "",                    # Example sourceFilter
-    [int]$destinationType = 0,                     # Example destinationType
-    [string]$destinationFilter = "",               # Example destinationFilter
-    [int]$callsType = 0,                           # Example callsType
-    [int]$callTimeFilterType = 0,                  # Example callTimeFilterType
-    [string]$callTimeFilterFrom = '0:00:0',        # Example callTimeFilterFrom
-    [string]$callTimeFilterTo = '0:00:0',          # Example callTimeFilterTo
-    [int]$top = 100000,                            # Example top parameter
-    [int]$skip = 0,                                # Example skip parameter
-    [string]$search = "",                          # Example search filter
-    [string]$filter = "",                           # Example filter
+    [string]$from = "2024-12-01T00:00:00Z",			# Use ISO 8601 Zulu time format
+    [string]$to = "2024-12-31T23:59:59Z",			# Use ISO 8601 Zulu time format
+    [int]$sourceType = 0,							# Example sourceType
+    [string]$sourceFilter = "",						# Example sourceFilter
+    [int]$destinationType = 0,						# Example destinationType
+    [string]$destinationFilter = "",				# Example destinationFilter
+    [int]$callsType = 0,							# Example callsType
+    [int]$callTimeFilterType = 0,					# Example callTimeFilterType
+    [string]$callTimeFilterFrom = '0:00:0',			# Example callTimeFilterFrom
+    [string]$callTimeFilterTo = '0:00:0',			# Example callTimeFilterTo
+    [int]$top = 100000,								# Example top parameter
+    [int]$skip = 0,									# Example skip parameter
+    [string]$search = "",							# Example search filter
+    [string]$filter = "",							# Example filter
     [switch]$help
 )
 
@@ -49,7 +49,7 @@ NOTES:
 - The '-top' parameter limits the number of records fetched.
 - The '-skip' parameter allows skipping records for pagination.
 - Running command with default parameters will use:
-  -user "test" -url "https://YourSubdomainHere.3cx.eu:5001" -from "2025-02-01T00:00:00" -to "2025-02-28T23:59:59" -top 10000
+  -user "$user" -url "$url" -from "$from" -to "$to" -top $top
 
 "@
     exit 0
@@ -60,6 +60,14 @@ if (-not $key) {
     Write-Host "Error: Please provide the API key using '-key' parameter. To see complete help use '-help'."
     exit 1
 }
+
+# Run only on PowerShell 5.x until I can fix date/time formatting for PS 7.x
+if ($PSVersionTable.PSVersion.Major -gt 5) {
+    Write-Host "Warning: Script requires PowerShell version 5.1 or lower." -ForegroundColor Red
+    exit
+}
+
+$ErrorActionPreference = "Stop"
 
 # Time the script
 Write-Host "`nScript started: " $(date)
@@ -89,10 +97,10 @@ try {
 
 $global:token = $tokenResponse.access_token
 
-$headers = @{ Authorization = "Bearer $($tokenResponse.access_token)" }
+$headers = @{ Authorization = "Bearer $($global:token)" }
 
 # Define the full URI with query parameters using parameters (modified for new endpoint)
-$FullURI = "$url/xapi/v1/ReportCallLogData/Pbx.GetCallLogData(periodFrom=$from,periodTo=$to,sourceType=$sourceType,sourceFilter='$sourceFilter',destinationType=$destinationType,destinationFilter='$destinationFilter',callsType=$callsType,callTimeFilterType=$callTimeFilterType,callTimeFilterFrom='$callTimeFilterFrom',callTimeFilterTo='$callTimeFilterTo',hidePcalls=true)?`$top=$top&`$skip=$skip&`$count=true&`$orderby=StartTime"
+$FullURI = "$url/xapi/v1/ReportCallLogData/Pbx.GetCallLogData(periodFrom=$from,periodTo=$to,sourceType=$sourceType,sourceFilter='$sourceFilter',destinationType=$destinationType,destinationFilter='$destinationFilter',callsType=$callsType,callTimeFilterType=$callTimeFilterType,callTimeFilterFrom='$callTimeFilterFrom',callTimeFilterTo='$callTimeFilterTo',hidePcalls=true)?`$orderby=StartTime asc&`$top=$top&`$skip=$skip&`$count=true"
 
 # Function to convert ISO 8601 CallTime to Excel-friendly format
 function Convert-CallTime($isoDuration) {
@@ -249,6 +257,11 @@ $global:callhistory = $global:response | Select-Object -ExpandProperty value | S
 Write-Host "Done fetching call history!"
 Write-Host "Total rows in filtered query:" $global:response.'@odata.count'
 Write-Host "Total rows fetched: $($global:callhistory.Count)`n"
+
+if ($global:response.'@odata.count' -eq 0) {
+	Write-Host "No data matching this filter!`n" -ForegroundColor Red
+	exit 1
+	}
 
 # Add formatted columns with progress bar
 Write-Host "Please wait while adding formatted columns for 'TalkingDuration', 'RingingDuration', 'StartDate', 'DayOfWeek', ... (...outputingo every 1000th row as preview...)"
