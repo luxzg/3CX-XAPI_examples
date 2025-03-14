@@ -36,7 +36,7 @@ NOTES:
 - In case that ImportExcel module is not available, XLSX export will be skipped.
 - The '-top' parameter limits the number of records fetched.
 - Running command with default parameters will use:
-	-user "test" -url "https://YourSubdomainHere.3cx.eu:5001" -from "2025-02-01" -to "2025-02-28" -top 100000
+	-user "$user" -url "$url" -from "$from" -to "$to" -top $top
 
 "@
     exit 0
@@ -47,6 +47,14 @@ if (-not $key) {
     Write-Host "Error: Please provide the API key using '-key' parameter. To see complete help use '-help'."
     exit 1
 }
+
+# Run only on PowerShell 5.x until I can fix date/time formatting for PS 7.x
+if ($PSVersionTable.PSVersion.Major -gt 5) {
+    Write-Host "Warning: Script requires PowerShell version 5.1 or lower." -ForegroundColor Red
+    exit
+}
+
+$ErrorActionPreference = "Stop"
 
 # Time the script
 Write-Host "`nScript started: " $(date)
@@ -73,7 +81,7 @@ try {
 
 $global:token = $tokenResponse.access_token
 
-$headers = @{ Authorization = "Bearer $($tokenResponse.access_token)" }
+$headers = @{ Authorization = "Bearer $($global:token)" }
 
 # Fetch call history URI
 $FullURI = "$url/xapi/v1/CallHistoryView?`$orderby=SegmentStartTime asc&`$top=$top&`$filter=date(SegmentStartTime) ge $from and date(SegmentStartTime) le $to&`$count=true"
@@ -130,6 +138,11 @@ $global:callhistory = $global:response | Select-Object -ExpandProperty value # E
 Write-Host "Done fetching call history!"
 Write-Host "Total rows in filtered query:" $global:response.'@odata.count'
 Write-Host "Total rows fetched: $($global:callhistory.Count)`n"
+
+if ($global:response.'@odata.count' -eq 0) {
+	Write-Host "No data matching this filter!`n" -ForegroundColor Red
+	exit 1
+	}
 
 # Add formatted columns with progress bar
 Write-Host "Please wait while adding formatted columns for 'CallTime (seconds)' & 'CallTime (formatted)' (...outputingo every 1000th row as preview...)"
