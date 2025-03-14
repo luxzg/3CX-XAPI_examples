@@ -9,6 +9,7 @@ Example scripts and code to work with 3CX V20 XAPI endpoints
   
 Note:  
 - Aimed at 3CX V20 XAPI
+- Currently working best with PowerShell 5.x due to how PS7+ handles date/time, didn't have time to debug and add a fix
 - Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
   
 # Usage
