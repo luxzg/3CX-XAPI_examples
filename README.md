@@ -246,18 +246,18 @@ Another gold mine, at least for those that haven't yet used OData. I'm linking d
 If you have access login here: https://www.3cx.com/community/  
   
 Some useful threads:  
-- https://www.3cx.com/community/threads/api-callhistoryview-filter-datetime-parameters.132426/
 * Discussing issues accessing `CallHistoryView` endpoint and filtering by the date/time as defined with ISO specification
-- https://www.3cx.com/community/threads/3cx-xapi-callhistoryview-code-explanations.132684/
+  - https://www.3cx.com/community/threads/api-callhistoryview-filter-datetime-parameters.132426/
 * Discussion about codes present in outputs of both `CallHistoryView` and `ReportCallLogData` endpoints
-- https://www.3cx.com/community/threads/3cx-v20-api.132178/
-* Has some connection examples in Python and links to other threads/posts with PowerShell examples
-- https://www.3cx.com/community/threads/help-getting-the-api-token-on-v20-build-1620.125285/#post-591067
-- https://www.3cx.com/community/threads/how-to-use-3cx-api.131540/#post-626176
+  - https://www.3cx.com/community/threads/3cx-xapi-callhistoryview-code-explanations.132684/
+* Some connection and code examples in Python and links to other threads/posts with PowerShell examples on 3cx.de forum
+  - https://www.3cx.com/community/threads/3cx-v20-api.132178/
+  - https://www.3cx.com/community/threads/how-to-use-3cx-api.131540/#post-626176
 * Talks about how to use `/ReportCallLogData/Pbx.GetCallLogData()` because it is a function() so syntax and requirements are different
-- https://www.3cx.com/community/threads/setup-of-call-control-api.131572/
+  - https://www.3cx.com/community/threads/help-getting-the-api-token-on-v20-build-1620.125285/#post-591067
 * Sort of a warning to pitfals represented by somewhat poor and undocumented aspects of UI on the web console while creating API integration credentials
-  
+  - https://www.3cx.com/community/threads/setup-of-call-control-api.131572/  
+    
 # 3rd party PowerShell module for 3CX XAPI  
 I've found a PS module that looks functional, though it covers basic endpoint. It did not suite my purposes, but I am including it here for the reference, perhaps it keeps getting updates and maybe grows into something more useful over time. Important note is that this wrapper module uses username and password for authentication and authorization! Your API client ID/secret will be useless unless you modify the module code!!  
   
