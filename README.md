@@ -4,10 +4,15 @@ Example scripts and code to work with 3CX V20 XAPI endpoints
 # 2025-03-12
 - First upload!
 - Includes working scripts for `/xapi/v1/CallHistoryView` and `/xapi/v1/ReportCallLogData/Pbx.GetCallLogData()` endpoints
-- Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
-- Aimed at 3CX V20 XAPI
+# 2025-03-14
+- Added script for accessing `/xapi/v1/ReportAbandonedQueueCalls/Pbx.GetAbandonedQueueCallsData()`
   
-Scripts are well commented and well layed out (IMHO).  
+Note:  
+- Aimed at 3CX V20 XAPI
+- Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
+  
+# Usage
+Scripts are generally well commented and well layed out (IMHO).  
   
 Simply executing the .ps1 scripts will provide an error notice :  
 `Error: Please provide the API key using '-key' parameter. To see complete help use '-help'.`
@@ -39,8 +44,9 @@ Current files:
 - fetch_call_history.ps1 -> first script, using `CallHistoryView`, and no progress bar for HTTP request
 - fetch_call_history2.ps1 -> same as first but improved with approximation of a progress for HTTP request
 - fetch_call_report.ps1 -> variation of the script using `ReportCallLogData` endpoint that provides way more details than just the call logs in first two scripts
+- fetch_abandoned_queue_calls_report.ps1 -> new script using `ReportAbandonedQueueCalls` endpoint for abandoned calls
   
-Scripts were written to be universal, with one minor exception. Due to my own needs I've added names of days in Croatian language in the 3rd script and they're displayed in the last column. It also includes English names of days in column before that. Feel free to ignore or comment out that code, or reuse ut for other languages that you may need. Other than that scripts should be well suited for any user.  
+Scripts were written to be universal, with one minor exception. Due to my own needs I've added names of days in Croatian language in some of the scripts and they're displayed in the last column. It also includes English names of days in column before that. Feel free to ignore or comment out that code, or reuse ut for other languages that you may need. Other than that scripts should be well suited for any user.  
   
 Note that scripts require API integration user & key (secret), process of obtaiing one through 3CX Web UI console is explained below.  
   
@@ -212,6 +218,39 @@ You will often get codes like 401, 403, 404, 500, 504, maybe more.
 - 404 Not Found - while it may mean you've entered wrong URL or made a type in domain, there is one more big one, if you use function() type endpoints, not providing all required data, or using malformed data, you may get 404 error because whatever you typed inside brackets `(...)` does not respond to expected data, so if your URL looks good, and you're using endpoint that contains brackets `(...)`, check the stuff inside brackets as well
 - 500 Internal Server Error - obviously, some big unknown went wrong, just to name a few, wrong data type was sent (eg you sent string when XAPI expected integer), data was malformed (eg. wrong date/time format), and so on
 - 504 Gateway Timeout - long running query timed out, you may encounter that if you pull a huge dataset from CallHistoryView for example, solution is usually to select shorter time range as an easy way to make data set smaller and easier to process
+  
+# Fighting the error codes!
+Most of the `404` and `500` codes will be your mistake because you don't know what the XAPI endpoint expects from you, and you keep blindly sending data because documentation isn't available for what you're trying.  
+  
+So here are some tips and tricks how to get valid parameters in an easier way!  
+  
+Since official 3CX web console uses same XAPI as we are trying to do, you can often find these requests and study them to see how the valid request should look like.  
+For example, when querying endpoint `ReportAbandonedQueueCalls/Pbx.GetAbandonedQueueCallsData()` you keep getting 404 error.  
+Swagger will tell you part of the information, e.g. datetime format, that `waitInterval` & `queueDns` should be strings and that they are required, and so on.  
+  
+But in this case:  
+	- what is the `queueDns` string? Is it "1234"? Or "Support Queue"? Or "Support Queue (1234)"? This could be anything!
+	- similar with `waitInterval` string, it's probably some time, so maybe try "30" as in seconds? Or "30s"? Or "PT30"? Nope, not working...
+And you keep getting that `404` whatever you try, right, and no helpful feedback. Now the solution...  
+  
+Now, open Chrome, login to your web console as admin, go to `Admin - Reports` and you will see report named literally the same - `Abandoned Queue Calls`.  
+Press `F12` to open `Developer Tools`, select `Network` tab, select `Fetch/XHR` filter, and then click the link to run the report.  
+You should catch some requests in `Developer Tools`, and if you check `Headers` tab of those requests one will almost certainly have `Request URL` looking something like...  
+	`https://FQDN:port/xapi/v1/ReportAbandonedQueueCalls/Pbx.GetAbandonedQueueCallsData(periodFrom=2025-03-13T23%3A00%3A00.000Z,periodTo=2025-03-14T23%3A00%3A00.000Z,queueDns='1234',waitInterval='0%3A00%3A0')?%24top=100&%24skip=0`
+Throw that into something like https://www.urldecoder.org/ and click `Decode`, and you'll get something really useful looking like:  
+	`https://FQDN:port/xapi/v1/ReportAbandonedQueueCalls/Pbx.GetAbandonedQueueCallsData(periodFrom=2025-03-13T23:00:00.000Z,periodTo=2025-03-14T23:00:00.000Z,queueDns='1234',waitInterval='0:00:0')?$top=100&$skip=0`  
+  
+Now you can plainly see what the example parameters look like, how the value is properly formatted and so on, in this example:  
+```
+periodFrom	=	2025-03-13T23:00:00.000Z
+periodTo	=	2025-03-14T23:00:00.000Z
+queueDns	=	'1234'
+waitInterval=	'0:00:0')
+$top		=	100
+$skip		=	0
+```
+Isn't that way nicer? How long would it otherwise take to figure out all those formats?  
+End remember, none of it is suggested in the official documents, swagger, or in error response of the API.  
   
 # Official documentation  
 URL: https://www.3cx.com/docs/configuration-rest-api/  
