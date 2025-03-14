@@ -230,11 +230,12 @@ Swagger file is available on your own PBX as well, but you need to know how to a
 For the reference your local swagger should be located at URL: `https://yourpbxdomain.3cx.eu:5001/xapi/v1/swagger.yaml`  
 You can also see some of the information by running command: `Invoke-RestMethod -Method Get -Uri "https://yourpbxdomain.3cx.eu:5001/xapi/v1" -Headers $headers | Select-Object -ExpandProperty value`  
   
-# Postman / swagger specs  
-Luckily, someone also put whole XAPI spec on Postman website, which is good way to browse it and learn about it with a bit more visual presentation.  
+# Postman / Swagger specs  
+Luckily, we have two nice resources to visualize `swagger.yaml`:
+- Go to https://editor-next.swagger.io/ and from menu pick `File - Import URL` and paste that same `swagger.yaml` URL from GitHub : `https://github.com/3cx/xapi-tutorial/blob/master/swagger.yaml `, and you can now browse it in more human readable format
+- Someone also put whole XAPI spec on Postman website, at https://www.postman.com/simsyn-dev/dev/collection/rubys7v/xapi , which is another good way to browse it and learn about it with a bit more visual presentation.  
   
-URL: https://www.postman.com/simsyn-dev/dev/collection/rubys7v/xapi  
-For example digging into CallHistoryView, you can see a download endpoint, but also a normal endpoint to query data, you can then see query parameters like `$top,$filter,$count,$orderby,$select`, their data types, and so on. You also get `curl` examples, and if you dig into "Retrieved collection" you can see expected output in JSON, again with the structure, value names and data types, and so on. Now you really get the feeling what to expect and what's available.  
+For example digging into CallHistoryView, you can see a download function endpoint, but also a normal entity endpoint to query data, you can then see query parameters like `$top,$filter,$count,$orderby,$select`, their data types, and so on. You also get `curl` examples, and if you dig into "Responses" (in SwaggerEditor) or "Retrieved collection" (in Postman) you can see expected output in JSON, again with the structure, value names and data types, and so on. Now you really get the feeling what to expect and what's available. Use one you prefer, as much as I see they output same data with slightly different representation, that's all.  
   
 # OData protocol specifications  
 URL: https://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/part1-protocol/odata-v4.0-errata03-os-part1-protocol-complete.html#_The_$filter_System  
@@ -252,6 +253,7 @@ Some useful threads:
 - https://www.3cx.com/community/threads/3cx-v20-api.132178/
 * Has some connection examples in Python and links to other threads/posts with PowerShell examples
 - https://www.3cx.com/community/threads/help-getting-the-api-token-on-v20-build-1620.125285/#post-591067
+- https://www.3cx.com/community/threads/how-to-use-3cx-api.131540/#post-626176
 * Talks about how to use `/ReportCallLogData/Pbx.GetCallLogData()` because it is a function() so syntax and requirements are different
 - https://www.3cx.com/community/threads/setup-of-call-control-api.131572/
 * Sort of a warning to pitfals represented by somewhat poor and undocumented aspects of UI on the web console while creating API integration credentials
@@ -292,4 +294,4 @@ Also, remember that you need to specifically enable if your API integration clie
 I plan to make a PHP sample, at least for basic token retrieval and calling few simpler endpoints, but don't have strict timeline yet.  
 If you have something useful to add let me know, I'd be glad to add it.  
   
-Note once more that the API is relatively new, and there isn't much material about it. Official docs are lacking at best... so even these few samples required a lot if trials and errors. Hopefully this repo with this Readme and a few samples helps people get started and gets the ball rolling. 3CX Version 20, Update 5 was just released a day ago, and they are promissing more reporting and API news for Update 6 (probably early summer 2025) so things will most probably change a lot during 2025. Keep watching official changelogs for any news : https://www.3cx.com/blog/change-log/phone-system-change-log-v20/
+Note once more that the API is relatively new, and there isn't much material about it. Official docs are lacking at best... so even these few samples required a lot if trials and errors. Hopefully this repo with this Readme and a few samples helps people get started and gets the ball rolling. 3CX Version 20, Update 5 was just released a day ago, and they are promissing more reporting and API news for Update 6 (probably early summer 2025) so things will most probably change a lot during 2025. Keep watching official changelogs for any news : https://www.3cx.com/blog/change-log/phone-system-change-log-v20/ ; as well as forum and blogs for news about what they call Reporting 2.0 : https://www.3cx.com/community/threads/reporting-2-0-the-reporting-roadmap-at-3cx.131057/
