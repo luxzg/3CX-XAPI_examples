@@ -1,11 +1,22 @@
 # 3CX-XAPI_examples
 Example scripts and code to work with 3CX V20 XAPI endpoints
   
+# 2025-03-15
+- old scripts moved to `old-standalone_scripts` and will not be updated anymore
+- new modular approach uploaded to `scripts_with_modules`, contains folder with modules (functions for repeatable tasks) and scripts themselves (plan is to have one per endpoint)
+- inside `\modules\CommonFunctions.psm1` you have functions for commonly used tasks, eg, getting token, invoking requests, progress bars, formatting paths, showing help, showing sample data, exports to CSV/Excel, and so on, much of it is related to working with data AFTER it was fetched, as I've tailored it to my own needs, you can shorten it a lot if you just want raw data
+- inside `\modules\DateTimeFunctions.psm1` you have functions that work with date/time formats converting them from/to diffeent ways of representing dates and times, converting to seconds, names of days, etc., again, much of this you may not need if you just need raw data, but it's there free to use
+- to use new scripts make sure to download the folder and retain the file/folder structure
+# 2025-03-14
+- Added script for accessing `/xapi/v1/ReportAbandonedQueueCalls/Pbx.GetAbandonedQueueCallsData()`
+Current files:  
+- fetch_call_history.ps1 -> first script, using `CallHistoryView`, and no progress bar for HTTP request
+- fetch_call_history2.ps1 -> same as first but improved with approximation of a progress for HTTP request
+- fetch_call_report.ps1 -> variation of the script using `ReportCallLogData` endpoint that provides way more details than just the call logs in first two scripts
+- fetch_abandoned_queue_calls_report.ps1 -> new script using `ReportAbandonedQueueCalls` endpoint for abandoned calls
 # 2025-03-12
 - First upload!
 - Includes working scripts for `/xapi/v1/CallHistoryView` and `/xapi/v1/ReportCallLogData/Pbx.GetCallLogData()` endpoints
-# 2025-03-14
-- Added script for accessing `/xapi/v1/ReportAbandonedQueueCalls/Pbx.GetAbandonedQueueCallsData()`
   
 Note:  
 - Aimed at 3CX V20 XAPI
@@ -13,12 +24,12 @@ Note:
 - Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
   
 # Usage
-Scripts are generally well commented and well layed out (IMHO).  
+Scripts are generally well commented and well layed out (IMHO). Feel free to provide feedback!  
   
-Simply executing the .ps1 scripts will provide an error notice :  
-`Error: Please provide the API key using '-key' parameter. To see complete help use '-help'.`
+Simply executing the .ps1 scripts will provide guided input for mandatory parameters (such as user, key, url, etc).
   
-Rest of the usage is explained in help section, such as (will differ between scripts):  
+Rest of the usage is explained in help section that is reached when running scripts with `-help` parameter.  
+Sample help (will differ slightly between scripts):  
 ```
 USAGE:
     \<script_path>\fetch_call_history.ps1 -user "test" -key "your_client_secret" -url "https://YourSubdomainHere.3cx.eu:5001" -from "YYYY-MM-DD" -to "YYYY-MM-DD" -top 100000
@@ -37,19 +48,13 @@ NOTES:
         Import-Module ImportExcel
 - In case that ImportExcel module is not available, XLSX export will be skipped.
 - The '-top' parameter limits the number of records fetched.
-- Running command with default parameters will use:
-        -user "test" -url "https://YourSubdomainHere.3cx.eu:5001" -from "2025-02-01" -to "2025-02-28" -top 100000
+- The '-skip' parameter allows skipping records for pagination.
 ```
   
-Current files:  
-- fetch_call_history.ps1 -> first script, using `CallHistoryView`, and no progress bar for HTTP request
-- fetch_call_history2.ps1 -> same as first but improved with approximation of a progress for HTTP request
-- fetch_call_report.ps1 -> variation of the script using `ReportCallLogData` endpoint that provides way more details than just the call logs in first two scripts
-- fetch_abandoned_queue_calls_report.ps1 -> new script using `ReportAbandonedQueueCalls` endpoint for abandoned calls
+New modular scripts were written to be universal and reuse as much code as possible.  
+Note that due to my own needs I've added names of days in Croatian language in some of the scripts. It also includes English names of days in column before that. Feel free to ignore or comment out that code, or reuse the function for any other languages that you may need.  
   
-Scripts were written to be universal, with one minor exception. Due to my own needs I've added names of days in Croatian language in some of the scripts and they're displayed in the last column. It also includes English names of days in column before that. Feel free to ignore or comment out that code, or reuse ut for other languages that you may need. Other than that scripts should be well suited for any user.  
-  
-Note that scripts require API integration user & key (secret), process of obtaiing one through 3CX Web UI console is explained below.  
+IMPORTANT : scripts require API integration user & key (secret), process of obtaiing one through 3CX Web UI console is explained below.  
   
 # Obtaining API credentials
   
