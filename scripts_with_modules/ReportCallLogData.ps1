@@ -1,4 +1,4 @@
-# fetch_call_history.ps1
+# ReportCallLogData.ps1
 
 # Set default parameters
 param(
