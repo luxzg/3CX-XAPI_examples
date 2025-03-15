@@ -1,13 +1,21 @@
 # DateTimeFunctions.psm1
 
-# Function to convert ISO 8601 time duration "PTxHxMxS" format to human readable format "HH:mm:ss"
+# Function to convert ISO 8601 time duration to human readable format "HH:mm:ss"
 function Convert-IsoDurationToHumanReadable($isoDuration) {
-    if ($isoDuration -match '^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$') {
-        $hours = if ($matches[1]) { [int]$matches[1] } else { 0 }
-        $minutes = if ($matches[2]) { [int]$matches[2] } else { 0 }
-        $seconds = if ($matches[3]) { [math]::Round([decimal]$matches[3]) } else { 0 }
+    if ($isoDuration -match '^P(?:(\d+)W)?(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$') {
+        $weeks = if ($matches[1]) { [int]$matches[1] } else { 0 }
+        $days = if ($matches[2]) { [int]$matches[2] } else { 0 }
+        $hours = if ($matches[3]) { [int]$matches[3] } else { 0 }
+        $minutes = if ($matches[4]) { [int]$matches[4] } else { 0 }
+        $seconds = if ($matches[5]) { [math]::Round([decimal]$matches[5]) } else { 0 }
 
-        # Ensure seconds/minutes overflow is handled correctly
+        # Convert weeks to days
+        $days += $weeks * 7
+
+        # Convert days to hours
+        $hours += $days * 24
+
+        # Handle overflow in time units
         if ($seconds -ge 60) {
             $minutes += [math]::Floor($seconds / 60)
             $seconds = $seconds % 60
@@ -17,24 +25,31 @@ function Convert-IsoDurationToHumanReadable($isoDuration) {
             $minutes = $minutes % 60
         }
 
-        # Ensure all values are properly converted to integers
+        # Ensure all values are properly converted to integers before formatting
         $hours = [int]$hours
         $minutes = [int]$minutes
         $seconds = [int]$seconds
 
-        # Format as HH:MM:SS
+        # Format as "HH:mm:ss" ensuring all values are properly converted to two-digit format
         return "{0:D2}:{1:D2}:{2:D2}" -f $hours, $minutes, $seconds
     }
     return "00:00:00"
 }
 
-# Function to convert ISO 8601 time duration "PTxHxMxS" format to total seconds (integer)
+# Function to convert ISO 8601 time duration to total seconds
 function Convert-IsoDurationToSeconds($isoDuration) {
-    if ($isoDuration -match '^PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$') {
-        $hours = if ($matches[1]) { [int]$matches[1] } else { 0 }
-        $minutes = if ($matches[2]) { [int]$matches[2] } else { 0 }
-        $seconds = if ($matches[3]) { [math]::Round([decimal]$matches[3]) } else { 0 }
-        return ($hours * 3600) + ($minutes * 60) + [math]::Round($seconds)  # Return total seconds
+    if ($isoDuration -match '^P(?:(\d+)W)?(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$') {
+        $weeks = if ($matches[1]) { [int]$matches[1] } else { 0 }
+        $days = if ($matches[2]) { [int]$matches[2] } else { 0 }
+        $hours = if ($matches[3]) { [int]$matches[3] } else { 0 }
+        $minutes = if ($matches[4]) { [int]$matches[4] } else { 0 }
+        $seconds = if ($matches[5]) { [math]::Round([decimal]$matches[5]) } else { 0 }
+
+        # Convert weeks to days
+        $days += $weeks * 7
+
+        # Calculate total seconds
+        return ($days * 86400) + ($hours * 3600) + ($minutes * 60) + [math]::Round($seconds)
     }
     return 0
 }
