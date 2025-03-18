@@ -1,0 +1,1203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<helpItems schema="maml" xmlns="http://msh">
+<!-- Help for Get-3CXHelp -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-3CXHelp</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>3CXHelp</command:noun>
+      <maml:description>
+        <maml:para>Used to show help about this 3CX XAPI Module.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>
+	3CX XAPI Module for managing PBX data.
+	These scripta connect to the 3CX API (XAPI) to fetch and handle data.
+	They use authentication credentials (XAPI Client ID and key/secret) to retrieve data from a specified PBX server (URL).
+	The results are returned in JSON format and displayed in a structured manner, and export it to CSV/XLSX if necessary.
+
+	NOTES
+	- This script requires PowerShell 5.1 or 7.5+. Other versions are not supported.
+	- Requires `.psm1` modules for common functions.
+	- Parameters '-user', '-key' and '-url' are required, please replace their values with valid API user, key/secret, and 3CX URL.
+	- The '-top' parameter limits the number of records fetched.
+	- The '-skip' parameter allows skipping records for pagination.
+	- When supported by endpoint date range will include both the starting and the ending date (-from and -to values).
+
+	Excel export notes:
+	- Most scripts include export of data to Excel XLSX file format.
+	- "ImportExcel" module is required for XLSX export and can be found here: https://github.com/dfinke/ImportExcel
+	- Ensure that the ImportExcel module is installed and imported in your PowerShell session. You can install it using the following command:
+		Install-Module -Name ImportExcel -Scope CurrentUser
+	- After installing, import the module:
+		Import-Module ImportExcel
+	- In case that ImportExcel module is not available, XLSX export will be skipped, while CSV export remains as alternative format.
+	  </maml:para>
+    </maml:description>
+	<command:syntax />
+	<command:parameters />
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+	<command:examples>
+      <command:example>
+        <maml:title># Example #1</maml:title>
+        <dev:code>Get-3CXHelp</dev:code>
+        <dev:remarks>
+          <maml:para>Show module help.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #2</maml:title>
+        <dev:code>Get-Help 3CX_XAPI_Module</dev:code>
+        <dev:remarks>
+          <maml:para>Equivalent to Get-3CXHelp command.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #3</maml:title>
+        <dev:code>Get-Help Get-ActiveCalls -Detailed</dev:code>
+        <dev:remarks>
+          <maml:para>Getting detailed view of help file for Get-ActiveCalls command.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Source:</maml:linkText>
+        <maml:uri>https://github.com/luxzg/3CX-XAPI_examples</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+<!-- Help for Get-ActiveCalls -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-ActiveCalls</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ActiveCalls</command:noun>
+      <maml:description>
+        <maml:para>Used to access ActiveCalls from the 3CX XAPI endpoint.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>This function connects to the 3CX XAPI and retrieves a list of currently active calls. It requires authentication credentials and PBX URL. The results are returned in JSON format and displayed in a structured manner.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-ActiveCalls</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch. NOTE: Parameter '-top' should not exceed 100 on this endpoint.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch. NOTE: Parameter '-top' should not exceed 100 for some reason.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title># Example #1</maml:title>
+        <dev:code>Get-ActiveCalls -user "test" -key "your_client_secret" -url "https://YourSubdomainHere.3cx.eu:5001" -top 100 -skip 0</dev:code>
+        <dev:remarks>
+          <maml:para>Getting first 100 records.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #2</maml:title>
+        <dev:code>Get-ActiveCalls -user "test" -key "abc123" -url "https://example.3cx.eu:5001" -top 50 -skip 150</dev:code>
+        <dev:remarks>
+          <maml:para>Skipping 150 records, then getting next 50 records.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #3</maml:title>
+        <dev:code>Get-ActiveCalls -user "admin" -key "xyz456" -url "https://yourpbx.3cx.eu:5001" -top 20 -skip 0</dev:code>
+        <dev:remarks>
+          <maml:para>Getting first 20 records.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Source:</maml:linkText>
+        <maml:uri>https://github.com/luxzg/3CX-XAPI_examples</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+<!-- Help for Get-CallHistoryView -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-CallHistoryView</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>CallHistoryView</command:noun>
+      <maml:description>
+        <maml:para>Used to access CallHistoryView from the 3CX XAPI endpoint.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Used to access CallHistoryView from the 3CX XAPI endpoint. It requires authentication credentials and PBX URL. The results are returned in JSON format and displayed in a structured manner.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-CallHistoryView</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide date/time format: YYYY-MM-DD</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide date/time format: YYYY-MM-DD</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide date/time format: YYYY-MM-DD</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide date/time format: YYYY-MM-DD</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title># Example #1</maml:title>
+        <dev:code>Get-CallHistoryView -user "test" -key "your_client_secret" -url "https://YourSubdomainHere.3cx.eu:5001" -from "YYYY-MM-DD" -to "YYYY-MM-DD" -top 100000 -skip 0</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #2</maml:title>
+        <dev:code>Get-CallHistoryView -user "test" -key "abc123" -url "https://example.3cx.eu:5001" -from "2025-02-01" -to "2025-02-28" -top 50000 -skip 1000</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #3</maml:title>
+        <dev:code>Get-CallHistoryView -user "admin" -key "xyz456" -url "https://yourpbx.3cx.eu:5001" -from "2024-12-01" -to "2024-12-31" -top 200000 -skip 0</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Source:</maml:linkText>
+        <maml:uri>https://github.com/luxzg/3CX-XAPI_examples</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+<!-- Help for Get-ReportAbandonedQueueCalls -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-ReportAbandonedQueueCalls</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ReportAbandonedQueueCalls</command:noun>
+      <maml:description>
+        <maml:para>Used to access ReportAbandonedQueueCalls from the 3CX XAPI endpoint. The '-queuedns' parameter is required and must be equal to extension number of the requested queue.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Used to access ReportAbandonedQueueCalls from the 3CX XAPI endpoint. It requires authentication credentials and PBX URL. The results are returned in JSON format and displayed in a structured manner. The '-queuedns' parameter is required and must be equal to extension number of the requested queue.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-ReportAbandonedQueueCalls</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>queuedns</maml:name>
+          <maml:description>
+            <maml:para>Provide extension number of queue. NOTE: The '-queuedns' parameter is required and must be equal to extension number of the requested queue.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>queuedns</maml:name>
+          <maml:description>
+            <maml:para>Provide extension number of queue. NOTE: The '-queuedns' parameter is required and must be equal to extension number of the requested queue.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title># Example #1</maml:title>
+        <dev:code>Get-ReportAbandonedQueueCalls -user "test" -key "your_client_secret" -url "https://YourSubdomainHere.3cx.eu:5001" -from "YYYY-MM-DDTHH:MM:SSZ" -to "YYYY-MM-DDTHH:MM:SSZ" -top 100000 -skip 0 -queuedns 1234</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #2</maml:title>
+        <dev:code>Get-ReportAbandonedQueueCalls -user "test" -key "abc123" -url "https://example.3cx.eu:5001" -from "2025-02-01T00:00:00Z" -to "2025-02-28T23:59:59Z" -top 50000 -skip 1000 -queuedns 4321</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #3</maml:title>
+        <dev:code>Get-ReportAbandonedQueueCalls -user "admin" -key "xyz456" -url "https://yourpbx.3cx.eu:5001" -from "2024-12-01T00:00:00-01:00" -to "2024-12-31T23:59:59-01:00" -top 200000 -skip 0 -queuedns 1111</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Source:</maml:linkText>
+        <maml:uri>https://github.com/luxzg/3CX-XAPI_examples</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+<!-- Help for Get-ReportCallLogData -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-ReportCallLogData</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ReportCallLogData</command:noun>
+      <maml:description>
+        <maml:para>Used to access ReportCallLogData from the 3CX XAPI endpoint.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Used to access ReportCallLogData from the 3CX XAPI endpoint. It requires authentication credentials and PBX URL. The results are returned in JSON format and displayed in a structured manner.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-ReportCallLogData</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title># Example #1</maml:title>
+        <dev:code>Get-ReportCallLogData -user "test" -key "your_client_secret" -url "https://YourSubdomainHere.3cx.eu:5001" -from "YYYY-MM-DDTHH:MM:SSZ" -to "YYYY-MM-DDTHH:MM:SSZ" -top 100000 -skip 0</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #2</maml:title>
+        <dev:code>Get-ReportCallLogData -user "test" -key "abc123" -url "https://example.3cx.eu:5001" -from "2025-02-01T00:00:00Z" -to "2025-02-28T23:59:59Z" -top 50000 -skip 1000</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #3</maml:title>
+        <dev:code>Get-ReportCallLogData -user "admin" -key "xyz456" -url "https://yourpbx.3cx.eu:5001" -from "2024-12-01T00:00:00-01:00" -to "2024-12-31T23:59:59-01:00" -top 200000 -skip 0</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Source:</maml:linkText>
+        <maml:uri>https://github.com/luxzg/3CX-XAPI_examples</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+<!-- Help for Get-ReportQueuePerformanceOverview -->
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-ReportQueuePerformanceOverview</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ReportQueuePerformanceOverview</command:noun>
+      <maml:description>
+        <maml:para>Used to access ReportQueuePerformanceOverview from the 3CX XAPI endpoint.</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Used to access ReportQueuePerformanceOverview from the 3CX XAPI endpoint. It requires authentication credentials and PBX URL. The results are returned in JSON format and displayed in a structured manner.</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-ReportQueuePerformanceOverview</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>queuedns</maml:name>
+          <maml:description>
+            <maml:para>Provide extension number of queue as string. NOTE: The '-queuedns' parameter is required and must be equal to extension number of the requested queue.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>user</maml:name>
+          <maml:description>
+            <maml:para>Provide API user/client ID used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>key</maml:name>
+          <maml:description>
+            <maml:para>Provide API key (Client secret) used for authentication.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>url</maml:name>
+          <maml:description>
+            <maml:para>Provide full 3CX PBX URL, including protocol and port, such as https://YourSubdomainHere.3cx.eu:5001</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>from</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>to</maml:name>
+          <maml:description>
+            <maml:para>Provide ISO 8601 Zulu date/time format: YYYY-MM-DDTHH:mm:ssZ</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>top</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to fetch</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>skip</maml:name>
+          <maml:description>
+            <maml:para>Provide a number of records to skip for pagination.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>queuedns</maml:name>
+          <maml:description>
+            <maml:para>Provide extension number of queue as string. NOTE: The '-queuedns' parameter is required and must be equal to extension number of the requested queue.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues />
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para></maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title># Example #1</maml:title>
+        <dev:code>Get-ReportQueuePerformanceOverview -user "test" -key "your_client_secret" -url "https://YourSubdomainHere.3cx.eu:5001" -from "YYYY-MM-DDTHH:MM:SSZ" -to "YYYY-MM-DDTHH:MM:SSZ" -top 100000 -skip 0 -queuedns 1234</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #2</maml:title>
+        <dev:code>Get-ReportQueuePerformanceOverview -user "test" -key "abc123" -url "https://example.3cx.eu:5001" -from "2025-02-01T00:00:00Z" -to "2025-02-28T23:59:59Z" -top 50000 -skip 1000 -queuedns 4321</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title># Example #3</maml:title>
+        <dev:code>Get-ReportQueuePerformanceOverview -user "admin" -key "xyz456" -url "https://yourpbx.3cx.eu:5001" -from "2024-12-01T00:00:00-01:00" -to "2024-12-31T23:59:59-01:00" -top 200000 -skip 0 -queuedns 1111</dev:code>
+        <dev:remarks>
+          <maml:para>Retrieves data from the 3CX PBX endpoint according to parameters provided.</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <maml:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>Source:</maml:linkText>
+        <maml:uri>https://github.com/luxzg/3CX-XAPI_examples</maml:uri>
+      </maml:navigationLink>
+    </maml:relatedLinks>
+  </command:command>
+<!-- Help finished -->
+</helpItems>

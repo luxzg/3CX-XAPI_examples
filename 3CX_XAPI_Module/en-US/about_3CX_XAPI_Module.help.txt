@@ -1,0 +1,70 @@
+TOPIC
+    about_3CX_XAPI_Module
+
+SHORT DESCRIPTION
+    3CX XAPI Module for accessing PBX data.
+
+LONG DESCRIPTION
+    These scripts connect to the 3CX API (XAPI) to fetch and handle data.
+    They use authentication credentials (XAPI Client ID and key/secret)
+    to retrieve data from a specified PBX server (URL).
+    
+    This module includes multiple functions:
+    - Get-3CXHelp
+    - Get-ActiveCalls
+    - Get-CallHistoryView
+    - Get-ReportAbandonedQueueCalls
+    - Get-ReportCallLogData
+    - Get-ReportQueuePerformanceOverview
+
+    The results are returned in JSON format and displayed in a structured manner.
+    Some scripts also support exporting data to CSV/XLSX.
+    
+    Separate help topics are available for each command listed, see examples section for execution details.
+    Get-Help commands supports '-Detailed', '-Full', & '-Examples' for more detailed views.
+
+COMMANDS
+    Get-3CXHelp - shows this help file
+    Get-ActiveCalls - Retrieves data from ActiveCalls endpoint of targeted 3CX PBX.
+    Get-CallHistoryView - Retrieves data from CallHistoryView endpoint of targeted 3CX PBX.
+    Get-ReportAbandonedQueueCalls - Retrieves data from ReportAbandonedQueueCalls endpoint of targeted 3CX PBX.
+    Get-ReportCallLogData - Retrieves data from ReportCallLogData endpoint of targeted 3CX PBX.
+    Get-ReportQueuePerformanceOverview - Retrieves data from ReportQueuePerformanceOverview endpoint of targeted 3CX PBX.
+
+EXAMPLES
+    To get command-specific help and see their examples run help commands such as:
+    Get-3CXHelp
+    Get-Help Get-3CXHelp
+    Get-Help Get-3CXHelp -Detailed
+    Get-Help Get-ActiveCalls
+    Get-Help Get-ActiveCalls -Detailed
+    Get-Help Get-CallHistoryView -Full
+    Get-Help Get-ReportAbandonedQueueCalls -Examples
+    Get-Help Get-ReportCallLogData -Examples
+    Get-Help Get-ReportQueuePerformanceOverview -Examples
+
+NOTES
+    - This script requires PowerShell 5.1 or 7.5+. Other versions are not supported.
+    - Requires `.psm1` modules for common functions.
+    - Make sure to replace parameters '-user','-key' & '-url' with a valid user (API CLient ID), key (API secret), and 3CX URL (FQDN) of your own system!
+    - On endpoints that support date from/to ('-from' and '-to' parameters) date range will include both the starting and the ending date.
+    - The '-top' parameter limits the number of records fetched.
+    - The '-skip' parameter allows skipping records, when used with '-top' will allow for proper pagination.
+
+EXCEL EXPORT
+    - Most scripts include export of data to Excel XLSX file format.
+    - "ImportExcel" PS module is required for XLSX export.
+    - You can find out more about it here: https://github.com/dfinke/ImportExcel
+    - Ensure that the ImportExcel module is installed and imported in your PowerShell session.
+    - You can install it using the following command:
+        Install-Module -Name ImportExcel -Scope CurrentUser
+    - After installing, import the module:
+        Import-Module ImportExcel
+    - In case that ImportExcel module is not available, XLSX export will be skipped.
+    - CSV has no external requirements, so it will always be available as alternative format in case that you do not want or need XLSX file.
+
+KEYWORDS
+    3CX XAPI API Export Excel CSV CallControl
+
+SEE ALSO
+    https://github.com/luxzg/3CX-XAPI_examples
