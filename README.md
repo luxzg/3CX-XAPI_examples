@@ -3,12 +3,33 @@ PowerShell module, example scripts and code to work with 3CX V20 XAPI endpoints
 
 Note:  
 - Aimed at 3CX V20 XAPI
-- Currently working best with PowerShell 5.x due to how PS7+ handles date/time, didn't have time to debug and add a fix
 - Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
 - [CHANGELOG.md](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md) here (updated 2025-03-18)
   
-# Usage
+# Module - Usage (new!)  
+- download this repo as ZIP, extract to local path of your liking
+- open Powershell 5.1 or PowerShell 7.5+
+- go to directory with extracted files, subfolder `\3CX_XAPI_Module` (containing file `3CX_XAPI_Module.psm1`), eg. `C:\<yourpath...>\3CX_XAPI_Module\`
+- import module by running: `Import-Module .\3CX_XAPI_Module`
+- get list of available commands by running: `Get-Command -Module 3CX_XAPI_Module`
+- get general module help by running: `Get-3CXHelp`
+- get help on individual commands by running for example: `Get-Help Get-ActiveCalls -Examples` or `Get-Help Get-CallHistoryView -Detailed`
+	- (mix and match to get help on command that you plan to use)
+- run commands to access XAPI, for example:
+```
+Get-ActiveCalls -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -skip 0 -top 100
+Get-CallHistoryView -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01" -to "2025-03-15" -skip 0 -top 100
+Get-ReportAbandonedQueueCalls -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01T00:00:00Z" -to "2025-03-15T23:59:59Z" -skip 0 -top 100 -queuedns 1111
+Get-ReportCallLogData -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01T00:00:00Z" -to "2025-03-15T23:59:59Z" -skip 0 -top 100
+Get-ReportQueuePerformanceOverview -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01T00:00:00Z" -to "2025-03-15T23:59:59Z" -skip 0 -top 100 -queuedns 1111
+```
+  
+IMPORTANT : Module requires valid API integration user (client ID) & key (secret), process of obtaining one through 3CX Web UI console is explained below.  
+  
+# Scripts - Usage (old)  
 Scripts are generally well commented and well layed out (IMHO). Feel free to provide feedback!  
+- Currently working best with PowerShell 5.x due to how PS7+ handles date/time
+	- don't plant to update (fix is in new the module which is better, use that!)
   
 Simply executing the .ps1 scripts will provide guided input for mandatory parameters (such as user, key, url, etc).
   
@@ -38,7 +59,7 @@ NOTES:
 New modular scripts were written to be universal and reuse as much code as possible.  
 Note that due to my own needs I've added names of days in Croatian language in some of the scripts. It also includes English names of days in column before that. Feel free to ignore or comment out that code, or reuse the function for any other languages that you may need.  
   
-IMPORTANT : scripts require API integration user & key (secret), process of obtaiing one through 3CX Web UI console is explained below.  
+IMPORTANT : Scripts require valid API integration user (client ID) & key (secret), process of obtaining one through 3CX Web UI console is explained below.  
   
 # Obtaining API credentials
   
@@ -57,8 +78,8 @@ You will be using these credentials as `-key` and `-user` when calling the scrip
   
 Note: During creation process, or later when editing, you should see checkboxes to separately enable `XAPI` and/or `Call Control`. Feel free to check both, but my scripts and examples are related to XAPI, so make sure that's enabled. I've added Call Control API as a short mention at the end of this file.  
   
-# Basics on connecting and querying
-While scripts in this repo contain full code, everyone likes to start small. So let's walk through some of my own early sample code right here.  
+# Basics on connecting and querying (manual way, no scripts/no modules)
+While scripts and modules in this repo contain full code, everyone likes to start small. So let's walk through some of my own early sample code right here.  
 Remember you need API client id and key/secret before proceeding, and make sure you can access the web console from the device you're running this, because your installation may have security in place blocking web (and XAPI) requests from reaching your 3CX system. This can be firewall, network routing, or even white/black listing IPs in the 3CX settings themselves (eg `Admin -> Advanced -> Console Restrictions`). Check that before pulling your hair out about why the code doesn't work! P.S. I've learned the hard way :-)  
   
 ```
@@ -308,7 +329,7 @@ Import-Module ImportExcel
 ```
   
 # 3CX Call Control API  
-I want to be clear that I did NOT USE and DO NOT PLAN to use this API. Documentation was updated yesterday so it should be OK. I am providing links here for the sake of completeness.  
+I want to be clear that I did NOT USE and DO NOT PLAN to use this API. Documentation was updated recently (mid March 2025) so it should be OK. I am providing links here for the sake of completeness.  
   
 URLs:  
 - https://www.3cx.com/docs/call-control-api/
@@ -323,4 +344,5 @@ Also, remember that you need to specifically enable if your API integration clie
 I plan to make a PHP sample, at least for basic token retrieval and calling few simpler endpoints, but don't have strict timeline yet.  
 If you have something useful to add let me know, I'd be glad to add it.  
   
-Note once more that the API is relatively new, and there isn't much material about it. Official docs are lacking at best... so even these few samples required a lot if trials and errors. Hopefully this repo with this Readme and a few samples helps people get started and gets the ball rolling. 3CX Version 20, Update 5 was just released a day ago, and they are promissing more reporting and API news for Update 6 (probably early summer 2025) so things will most probably change a lot during 2025. Keep watching official changelogs for any news : https://www.3cx.com/blog/change-log/phone-system-change-log-v20/ ; as well as forum and blogs for news about what they call Reporting 2.0 : https://www.3cx.com/community/threads/reporting-2-0-the-reporting-roadmap-at-3cx.131057/
+Note once more that the API is relatively new, and there isn't much material about it. Official docs are lacking at best... so even these few samples required a lot if trials and errors. Hopefully this repo with this Readme and a few samples helps people get started and gets the ball rolling. 3CX Version 20, Update 5 was just released a day ago, and they are promissing more reporting and API news for Update 6 (probably early summer 2025) so things will most probably change a lot during 2025. Keep watching official changelogs for any news : https://www.3cx.com/blog/change-log/phone-system-change-log-v20/ ; as well as forum and blogs for news about what they call Reporting 2.0 : https://www.3cx.com/community/threads/reporting-2-0-the-reporting-roadmap-at-3cx.131057/  
+  
