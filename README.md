@@ -5,6 +5,7 @@ Note:
 - Aimed at 3CX V20 XAPI
 - Currently working best with PowerShell 5.x due to how PS7+ handles date/time, didn't have time to debug and add a fix
 - Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
+- [CHANGELOG.md](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md) here (updated 2025-03-18)
   
 # Usage
 Scripts are generally well commented and well layed out (IMHO). Feel free to provide feedback!  
