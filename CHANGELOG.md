@@ -23,6 +23,15 @@ To access data you can try some of these commands:
 - To use the data directly you can maybe do something as simple as:  
 	- `"Person/extension $($global:3cxdata.value.Caller) is currently calling person/extension $($global:3cxdata.value.Callee)"`  
   
+For v0.1.2:  
+- Added new commands in about module help topic as well
+- Improved comments where needed
+- More efficient retrieval of First/Last 10 in Show-Sample
+- Fixed some edge cases for date/time conversions (mostly if input is empty)
+- Better name of day conversion (using language/culture codes)
+- Handling Excel export and column formatting in a better and safer way
+- Fixed error message when Import-Excel is missing (pointing to new help)
+  
 # 2025-03-18
 First public release of proper 3CX_XAPI_Module v0.1.0.  
 Many changes introduced:  
