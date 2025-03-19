@@ -1,10 +1,10 @@
 # 3CX-XAPI_examples
 PowerShell module, example scripts and code to work with 3CX V20 XAPI endpoints  
-
+  
 Note:  
 - Aimed at 3CX V20 XAPI
 - Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
-- [CHANGELOG.md](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md) here (updated 2025-03-18)
+- [CHANGELOG.md](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md) here (updated [2025-03-19](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md#2025-03-19))
   
 # Module - Usage (new!)  
 - download this repo as ZIP, extract to local path of your liking
@@ -13,19 +13,31 @@ Note:
 - import module by running: `Import-Module .\3CX_XAPI_Module`
 - get list of available commands by running: `Get-Command -Module 3CX_XAPI_Module`
 - get general module help by running: `Get-3CXHelp`
-- get help on individual commands by running for example: `Get-Help Get-ActiveCalls -Examples` or `Get-Help Get-CallHistoryView -Detailed`
-	- (mix and match to get help on command that you plan to use)
+- get help on individual commands by running for example: `Get-Help Get-ActiveCalls -Examples` or `Get-Help Get-CallHistoryView -Detailed`  
+	- (mix and match to get detailed help on command that you plan to use)
 - run commands to access XAPI, for example:
 ```
+# automated queries & exports
 Get-ActiveCalls -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -skip 0 -top 100
 Get-CallHistoryView -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01" -to "2025-03-15" -skip 0 -top 100
 Get-ReportAbandonedQueueCalls -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01T00:00:00Z" -to "2025-03-15T23:59:59Z" -skip 0 -top 100 -queuedns 1111
 Get-ReportCallLogData -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01T00:00:00Z" -to "2025-03-15T23:59:59Z" -skip 0 -top 100
 Get-ReportQueuePerformanceOverview -user "testuser" -key "AbCdEfGhIjKlMnOpRsTuVz1234567890" -url "https://yourpbxurl.3cx.eu:5001" -from "2025-03-01T00:00:00Z" -to "2025-03-15T23:59:59Z" -skip 0 -top 100 -queuedns 1111
+
+# manually accessing data
+$mynewtoken = Get-XAPIToken -user "testuser" -key "Aq1Sw2De3fr4Gt5Hz6Ju7Ki8Lo9P" -url "https://yourpbx.3cx.eu:5001"
+Invoke-XAPIRequestWithProgress -token $mynewtoken -uri "https://yourpbx.3cx.eu:5001/xapi/v1/swagger.yaml" -MaxSeconds 30 -Activity "Getting swagger.yaml documentation" -pscheck 5
+Invoke-XAPIRequestWithProgress -token $mynewtoken -uri "https://yourpbx.3cx.eu:5001/xapi/v1/ActiveCalls" -MaxSeconds 15 -Activity "Getting currently active calls" -pscheck 7
 ```
   
 IMPORTANT : Module requires valid API integration user (client ID) & key (secret), process of obtaining one through 3CX Web UI console is explained below.  
   
+NOTE:  
+- After requesting any data from XAPI you will now have new global variable `$global:3cxdata` (since module v0.1.1)  
+```
+$global:3cxdata.'@odata.count'
+$global:3cxdata.value
+```
 # Scripts - Usage (old)  
 Scripts are generally well commented and well layed out (IMHO). Feel free to provide feedback!  
 - Currently working best with PowerShell 5.x due to how PS7+ handles date/time
