@@ -1,5 +1,28 @@
 # Changelog of this repository
-
+  
+# 2025-03-19
+Added functionality proposed in issue https://github.com/luxzg/3CX-XAPI_examples/issues/1  
+  
+Exposed functions to get token or to manually run a HTTP request to XAPI.  
+After importing module you can get the list of all commands, including new ones, by running:  
+- `Get-Command -Module 3CX_XAPI_Module`  
+Proceed to obtain token by running something like:  
+- `$mynewtoken = Get-XAPIToken -user "testuser" -key "Aq1Sw2De3fr4Gt5Hz6Ju7Ki8Lo9P" -url "https://yourpbx.3cx.eu:5001"`  
+To get documentation file (`swagger.yaml`) from your XAPI you can use your freshly generated token in the following way:  
+- `Invoke-XAPIRequestWithProgress -token $mynewtoken -uri "https://yourpbx.3cx.eu:5001/xapi/v1/swagger.yaml" -MaxSeconds 30 -Activity "Getting swagger.yaml documentation" -pscheck 5`  
+You can find some endpoint in the swagger, then try using it like this:  
+- `Invoke-XAPIRequestWithProgress -token $mynewtoken -uri "https://yourpbx.3cx.eu:5001/xapi/v1/ActiveCalls" -MaxSeconds 15 -Activity "Getting currently active calls" -pscheck 7`  
+  
+I've also added storing returned dataset to global variable so it can be reused after calling any of data retrieval functions.  
+Since it is part of `Invoke-XAPIRequestWithProgress` it will work with both module functionality and manual invocation, and will always return a short help notice:  
+- `Original data returned from XAPI will be retained in global variable $global:3cxdata allowing you to further process it yourself.`  
+To access data you can try some of these commands:  
+- To see the context: `$global:3cxdata.'@odata.context'`  
+- To see the count (if using `$count=true` in your query): `$global:3cxdata.'@odata.count'`  
+- To see data itself: `$global:3cxdata.value`  
+- To use the data directly you can maybe do something as simple as:  
+	- `"Person/extension $($global:3cxdata.value.Caller) is currently calling person/extension $($global:3cxdata.value.Callee)"`  
+  
 # 2025-03-18
 First public release of proper 3CX_XAPI_Module v0.1.0.  
 Many changes introduced:  
