@@ -3,7 +3,7 @@
 #	source: https://github.com/luxzg/3CX-XAPI_examples
 #	by Luka Pribanić Lux, 2025-03-17
 
-# Getting paths of script and using it for other paths
+# Getting paths of script and using it for export paths
 function Get-ExportPaths {
     param (
         [Parameter(Mandatory)][string]$functionname,
@@ -28,7 +28,7 @@ function Get-ExportPaths {
     }
 }
 
-# Function to check if PowerShell version is <=5.1 or >=7.5 , otherwise fail
+# Function to check if PowerShell version is <=5.1 or >=7.5 , otherwise warn & fail
 function Test-PowerShellModuleVersion {
     $PSMajorMinor = [System.Version]::new($PSVersionTable.PSVersion.Major, $PSVersionTable.PSVersion.Minor)
 
@@ -49,8 +49,8 @@ function Test-PowerShellModuleVersion {
     }
 }
 
-function Get-XAPIToken {
 # Obtain authentication token from XAPI
+function Get-XAPIToken {
 	# Set default parameters
 	param(
 		[Parameter(Mandatory,
@@ -79,6 +79,7 @@ function Get-XAPIToken {
     return $tokenResponse.access_token
 }
 
+# Function to make HTTP request to API, including progress bar visualization
 function Invoke-XAPIRequestWithProgress {
     param (
 		[Parameter(Mandatory,
@@ -187,8 +188,8 @@ function Show-Sample {
 
 	# Display first & last 10 records, with selected columns only
 	Write-Host "`nOutput sample for first and last 10 rows, selected columns only: "
-	$data.value | Select-Object -First 10 | Select-Object $columns | Format-Table -AutoSize
-	$data.value | Select-Object -Last 10  | Select-Object $columns | Format-Table -AutoSize
+	$data.value | Select-Object -First 10 -Property $columns | Format-Table -AutoSize
+	$data.value | Select-Object -Last 10 -Property $columns | Format-Table -AutoSize
 
 	Write-Host "Output sample for first record, formatted as list:"
 	$data.value | Select-Object -First 1 | Format-List
@@ -253,22 +254,32 @@ function Export-DataToExcel {
         }
     }
 
-    if (Get-Module -ListAvailable -Name ImportExcel) {
+	# Import module only if it is availabile and it hasn't been imported already
+    if (!(Get-Module ImportExcel) -and (Get-Module -ListAvailable -Name ImportExcel)) {
         Import-Module ImportExcel
-		# Export to Excel first
+    }
+
+    # If ImportExcel module is loaded, format columns
+    if (Get-Module ImportExcel) {
+        # Export to Excel first
         Write-Host "Starting export to Excel file $excelPath ... `n"
-		$data | Export-Excel -Path $excelPath -AutoSize -FreezeTopRow -BoldTopRow -AutoFilter
-		
-		# After export apply column formatting, if specified by user
+        $data | Export-Excel -Path $excelPath -AutoSize -FreezeTopRow -BoldTopRow -AutoFilter
+
+        # After export apply column formatting, if specified by user
         if ($ColumnFormats) {
-			Write-Host "Excel column formatting specified, processing file... `n"
+            Write-Host "Excel column formatting specified, processing file... `n"
             $excel = Open-ExcelPackage $excelPath
             $worksheet = $excel.Workbook.Worksheets[1]
 
             foreach ($columnName in $ColumnFormats.Keys) {
-                $colIndex = ($data | Get-Member | Where-Object {$_.Name -eq $columnName}).Count
-                if ($columnIndex = ($worksheet.Cells["1:1"] | Where-Object {$_.Value -eq $columnName}).Start.Column) {
+                # Find the actual column index in the worksheet based on the header row (row 1), safely
+                $matchingCells = $worksheet.Cells["1:1"] | Where-Object { $_.Value -eq $columnName }
+                if ($matchingCells) {
+                    $columnIndex = $matchingCells | Select-Object -ExpandProperty Start | Select-Object -ExpandProperty Column
+                    # Apply formatting if the column exists in Excel
                     $worksheet.Column($columnIndex).Style.Numberformat.Format = $ColumnFormats[$columnName]
+                } else {
+                    Write-Host "Warning: Column '$columnName' not found in Excel, skipping formatting." -ForegroundColor Yellow
                 }
             }
 
@@ -276,7 +287,7 @@ function Export-DataToExcel {
         }
     }
     else {
-        Write-Host "ImportExcel module not available, skipping XLSX export. Run with -help to get more information."
+        Write-Host "ImportExcel module not available, skipping XLSX export. Run Get-3CXHelp to get more information."
 		return 0
     }
 
@@ -309,6 +320,7 @@ function Show-ProgressBar {
     Write-Progress -Activity $Activity -Status "$Current of $Total processed" -PercentComplete (($Current / $Total) * 100)
 }
 
+# Function to complete progress bar
 function Complete-ProgressBar {
     param (
         [string]$Activity
@@ -317,6 +329,7 @@ function Complete-ProgressBar {
     Write-Progress -Completed -Activity $Activity
 }
 
+# Function to add new column with specified data and format to existing dataset
 function Add-FormattedColumn {
     param (
         [Parameter(Mandatory)] [array]$data,
@@ -343,4 +356,5 @@ function Add-FormattedColumn {
     return $data
 }
 
+# Export all module functions
 Export-ModuleMember -Function *

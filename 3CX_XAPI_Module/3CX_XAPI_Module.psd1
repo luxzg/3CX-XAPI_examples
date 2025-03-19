@@ -1,5 +1,5 @@
 @{
-    ModuleVersion		= '0.1.1'
+    ModuleVersion		= '0.1.2'
     GUID				= 'a19a0b08-3bfd-47bf-b846-745906e33101'
     Author				= 'Luka Pribanić Lux'
     CompanyName			= 'none'

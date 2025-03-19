@@ -24,7 +24,9 @@ LONG DESCRIPTION
     Get-Help commands supports '-Detailed', '-Full', & '-Examples' for more detailed views.
 
 COMMANDS
-    Get-3CXHelp - shows this help file
+    Get-3CXHelp - Shows this help file.
+    Get-XAPIToken - Allows for manually obtaining access token.
+    Invoke-XAPIRequestWithProgress - Allows for manually accessing any XAPI endpoint.
     Get-ActiveCalls - Retrieves data from ActiveCalls endpoint of targeted 3CX PBX.
     Get-CallHistoryView - Retrieves data from CallHistoryView endpoint of targeted 3CX PBX.
     Get-ReportAbandonedQueueCalls - Retrieves data from ReportAbandonedQueueCalls endpoint of targeted 3CX PBX.

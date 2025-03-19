@@ -5,6 +5,7 @@
 
 # Function to convert ISO 8601 time duration to human readable format "HH:mm:ss"
 function Convert-IsoDurationToHumanReadable($isoDuration) {
+	if (-not $isoDuration) { return "00:00:00" }
     if ($isoDuration -match '^P(?:(\d+)W)?(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$') {
         $weeks = if ($matches[1]) { [int]$matches[1] } else { 0 }
         $days = if ($matches[2]) { [int]$matches[2] } else { 0 }
@@ -42,6 +43,7 @@ function Convert-IsoDurationToHumanReadable($isoDuration) {
 
 # Function to convert ISO 8601 time duration to total seconds
 function Convert-IsoDurationToSeconds($isoDuration) {
+	if (-not $isoDuration) { return 0 }
     if ($isoDuration -match '^P(?:(\d+)W)?(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+(?:\.\d+)?)S)?$') {
         $weeks = if ($matches[1]) { [int]$matches[1] } else { 0 }
         $days = if ($matches[2]) { [int]$matches[2] } else { 0 }
@@ -61,12 +63,14 @@ function Convert-IsoDurationToSeconds($isoDuration) {
 
 # Function to convert time duration in seconds to Excel friendly (fraction of 1 day)
 function Convert-IsoDurationToSecondsToExcelTimeValue($isoDuration) {
+	if (-not $isoDuration) { return 0 }
 	$seconds = Convert-IsoDurationToSeconds($isoDuration)
 	return $seconds/86400
 }
 
 # Function to convert ISO 8601 string to a local date string (YYYY-MM-DD)
 function Convert-IsoDateTimeToLocalDate($isoDateTime) {
+	if (-not $isoDateTime) { return $null }
     try {
         # Remove fractions of a second (if present) and keep the 'Z'
         $isoDateTime = $isoDateTime -replace '\.\d+Z$', 'Z'
@@ -83,6 +87,7 @@ function Convert-IsoDateTimeToLocalDate($isoDateTime) {
 
 # Function to convert ISO 8601 string to a local time string (HH:mm:ss)
 function Convert-IsoDateTimeToLocalTime($isoDateTime) {
+	if (-not $isoDateTime) { return $null }
     try {
         $isoDateTime = $isoDateTime -replace '\.\d+Z$', 'Z'
         $dateTime = [datetime]::ParseExact($isoDateTime, 'yyyy-MM-ddTHH:mm:ssZ', $null).ToLocalTime()
@@ -96,12 +101,14 @@ function Convert-IsoDateTimeToLocalTime($isoDateTime) {
 
 # Function to get the day of the week in English from an ISO 8601 string
 function Convert-IsoDateTimeToDayOfWeek($isoDateTime) {
+	if (-not $isoDateTime) { return $null }
     try {
-        # Define English day names
-        $dayNamesEnglish = @('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')
+        # Use English day names
+        #$dayNamesEnglish = @('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')
         $isoDateTime = $isoDateTime -replace '\.\d+Z$', 'Z'
         $dateTime = [datetime]::ParseExact($isoDateTime, 'yyyy-MM-ddTHH:mm:ssZ', $null).ToLocalTime()
-        return $dayNamesEnglish[$dateTime.DayOfWeek]
+		return $dateTime.ToString('dddd', [System.Globalization.CultureInfo]::GetCultureInfo("en-US"))
+        #return $dayNamesEnglish[$dateTime.DayOfWeek]
     }
     catch {
         Write-Warning "Invalid time format for $isoDateTime. Skipping conversion."
@@ -111,12 +118,14 @@ function Convert-IsoDateTimeToDayOfWeek($isoDateTime) {
 
 # Function to get the day of the week in Croatian from an ISO 8601 string
 function Convert-IsoDateTimeToDayOfWeekCro($isoDateTime) {
+	if (-not $isoDateTime) { return $null }
     try {
-        # Define Croatian day names
-        $dayNamesCroatian = @('nedjelja', 'ponedjeljak', 'utorak', 'srijeda', 'cetvrtak', 'petak', 'subota')
+        # Use Croatian day names
+        #$dayNamesCroatian = @('nedjelja', 'ponedjeljak', 'utorak', 'srijeda', 'cetvrtak', 'petak', 'subota')
         $isoDateTime = $isoDateTime -replace '\.\d+Z$', 'Z'
         $dateTime = [datetime]::ParseExact($isoDateTime, 'yyyy-MM-ddTHH:mm:ssZ', $null).ToLocalTime()
-        return $dayNamesCroatian[$dateTime.DayOfWeek]
+		return $dateTime.ToString('dddd', [System.Globalization.CultureInfo]::GetCultureInfo("hr-HR"))
+        #return $dayNamesCroatian[$dateTime.DayOfWeek]
     }
     catch {
         Write-Warning "Invalid time format for $isoDateTime. Skipping conversion."
@@ -126,7 +135,7 @@ function Convert-IsoDateTimeToDayOfWeekCro($isoDateTime) {
 
 # Function to convert ISO 8601 date/time eg. "yyyy-MM-ddTHH:mm:ss+HH:mm" format to Zulu by same ISO spec like "yyyy-MM-ddTHH:mm:ssZ"
 function Convert-IsoDateTimeToZulu($isoDateTime) {
-    
+	if (-not $isoDateTime) { return $null }
     # Try parsing the input date-time
     try {
         # Parse the input date-time string
