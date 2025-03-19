@@ -49,13 +49,20 @@ function Test-PowerShellModuleVersion {
     }
 }
 
-# Obtain authentication token from XAPI
 function Get-XAPIToken {
-    param (
-        [string]$url,
-        [string]$user,
-        [string]$key
-    )
+# Obtain authentication token from XAPI
+	# Set default parameters
+	param(
+		[Parameter(Mandatory,
+			HelpMessage="Provide API user/client ID as string")]
+			[string]$user,								# = "test",
+		[Parameter(Mandatory,
+			HelpMessage="Provide API key/secret as string")]
+			[string]$key,								# = "AbCdEfGh123456IjKlMnOp7890rStUvZ",
+		[Parameter(Mandatory,
+			HelpMessage="Provide PBX URL such as https://YourSubdomainHere.3cx.eu:5001")]
+			[string]$url								# = "https://YourSubdomainHere.3cx.eu:5001"
+	)
 
 	# Request Bearer Token
 	try {
@@ -74,11 +81,15 @@ function Get-XAPIToken {
 
 function Invoke-XAPIRequestWithProgress {
     param (
-        [string]$uri,
-        [string]$token,
+		[Parameter(Mandatory,
+			HelpMessage="Provide API access token as string, you can get it by running Get-XAPIToken")]
+			[string]$token,								# = "AbCdEfGh123456IjKlMnOp7890rStUvZ",
+		[Parameter(Mandatory,
+			HelpMessage="Provide full endpoint URI such as https://YourSubdomainHere.3cx.eu:5001/xapi/v1/ActiveCalls?`$count=true&`$orderby=EstablishedAt asc&`$skip=0&`$top=100")]
+			[string]$uri,								# = "https://YourSubdomainHere.3cx.eu:5001/xapi/v1/ActiveCalls?`$count=true&`$orderby=EstablishedAt asc&`$skip=0&`$top=100"
         [int]$MaxSeconds = 180,
         [string]$Activity = "Fetching Data",
-        [int]$pscheck
+        [int]$pscheck = 7								# = 7 # If not provided default to PS7.5+ path as a safer alternative
     )
 
 	# Inform user that API request can take time
@@ -132,6 +143,9 @@ function Invoke-XAPIRequestWithProgress {
 
     Write-Progress -Completed -Activity $Activity
     if ($result) {
+		$global:3cxdata = ''
+		$global:3cxdata = $result
+		Write-Host "`nOriginal data returned from XAPI will be retained in global variable `$global:3cxdata allowing you to further process it yourself. `n"
 		return $result
 	} else {
 		throw "No data received from API! `nExiting script."

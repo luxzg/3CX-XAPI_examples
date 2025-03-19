@@ -1,5 +1,5 @@
 @{
-    ModuleVersion		= '0.1.0'
+    ModuleVersion		= '0.1.1'
     GUID				= 'a19a0b08-3bfd-47bf-b846-745906e33101'
     Author				= 'Luka Pribanić Lux'
     CompanyName			= 'none'
@@ -7,7 +7,7 @@
     Description			= '3CX XAPI Module for accessing PBX data through XAPI'
     PowerShellVersion	= '5.1'
     RootModule			= '3CX_XAPI_Module.psm1'
-    FunctionsToExport	= @('Get-3CXHelp','Get-ActiveCalls', 'Get-CallHistoryView', 'Get-ReportAbandonedQueueCalls', 'Get-ReportCallLogData', 'Get-ReportQueuePerformanceOverview')
+    FunctionsToExport	= @('Get-3CXHelp','Get-XAPIToken','Invoke-XAPIRequestWithProgress','Get-ActiveCalls', 'Get-CallHistoryView', 'Get-ReportAbandonedQueueCalls', 'Get-ReportCallLogData', 'Get-ReportQueuePerformanceOverview')
     CmdletsToExport		= @()
     VariablesToExport	= '*'
     AliasesToExport		= '*'
