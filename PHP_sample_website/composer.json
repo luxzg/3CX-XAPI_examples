@@ -1,0 +1,6 @@
+{
+    "require": {
+        "phpoffice/phpspreadsheet": "^4.1",
+        "symfony/yaml": "^7.2"
+    }
+}
