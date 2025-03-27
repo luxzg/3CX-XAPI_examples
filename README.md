@@ -4,7 +4,7 @@ PowerShell module, example scripts and code to work with 3CX V20 XAPI endpoints
 Note:  
 - Aimed at 3CX V20 XAPI
 - Developed with the help of 3CX community! Thanks everyone! (links below to some helpful threads!)
-- [CHANGELOG.md](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md) here (updated [2025-03-19](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md#2025-03-19))
+- [CHANGELOG.md](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md) here (updated [2025-03-19](https://github.com/luxzg/3CX-XAPI_examples/blob/main/CHANGELOG.md#2025-03-27))
   
 # PHP sample site (new!)
 You can now find an example / proof of concept PHP website that accesses large amount of GET endpoints. Dedicated readme is included in the folder here:  
