@@ -1,5 +1,10 @@
 # Changelog of this repository
-  
+    
+# 2025-03-27
+Added sample PHP website proposed in issue https://github.com/luxzg/3CX-XAPI_examples/issues/2  
+Separate README can be found here: https://github.com/luxzg/3CX-XAPI_examples/tree/main/PHP_sample_website
+Even more details about functions included can be found here: https://github.com/luxzg/3CX-XAPI_examples/blob/main/PHP_sample_website/functions-readme.md
+
 # 2025-03-19
 Added functionality proposed in issue https://github.com/luxzg/3CX-XAPI_examples/issues/1  
   
