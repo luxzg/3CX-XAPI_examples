@@ -1,5 +1,3 @@
-# KINA
-
 # 3CX XAPI PHP Automation Toolkit
 
 After experimenting with 3CX XAPI via Postman and PowerShell, I developed this PHP solution to automate API interactions with comprehensive data handling capabilities.
@@ -53,6 +51,8 @@ graph TD
 | `download.php` | Streams exported file to browser |
 
 Consult separate readme file `functions-readme.md` for details about functions in `functions.php` file.
+
+Note: Files `swagger.yaml`, `swagger.json` and `definitions.php` will be created on first run!
 
 ## Installation & Setup
 
@@ -153,7 +153,7 @@ Out of ~100+ endpoints, **about 95% work flawlessly**. Some may return no data d
 
 ## Contributions & Issues
 
-If you run into issues, have suggestions, or want to contribute fixes – feel free to [open an issue](https://github.com/yourrepo/issues). It might help others too!  
+If you run into issues, have suggestions, or want to contribute fixes – feel free to [open an issue](https://github.com/luxzg/3CX-XAPI_examples/issues). It might help others too!  
 
 ---
 
